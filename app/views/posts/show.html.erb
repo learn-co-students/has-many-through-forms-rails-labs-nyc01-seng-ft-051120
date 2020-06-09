@@ -1,1 +1,22 @@
-
+<h1><%=@post.title%></h1>
+<%= @post.content%></p>
+<p><%@post.categories.map do |category|%>
+    Categories: <%=category.name%></p>
+    <%end%>
+    <p> <%@post.comments.map do |comment| %>
+        <%=comment.user.username%> says: <%=comment.content%></p>
+        <%end%>
+        Commentors: <%@post.users.distinct.each do |user|%>
+            <%=link_to user.username, user_path(user)%>
+            <%end%>
+<%=form_for @post.comments.build do |f| %>
+    <%=f.hidden_field :post_id%>
+    <%=f.collection_select :user_id, @users, :id, :username%>
+    <%=f.fields_for :user, @user do |user_fields|%>
+        <%=user_fields.label :username%>
+        <%=user_fields.text_field :username%>
+        <%end%>
+    <%=f.label :content, "New Comment"%>
+    <%=f.text_area :content %>
+    <%=f.submit%>
+<%end%>
